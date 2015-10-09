@@ -8,27 +8,39 @@ import org.eclipse.swt.widgets.Composite;
 
 import abstracts.MazeDisplayer;
 
+/**
+ * A type of MazeDisplayer that draws the Maze graphically in 3D.
+ * @author Guy Golan && Amit Sandak
+ *
+ */
 public class MazeCube extends MazeDisplayer {
 
-	protected int canvasWidth;
-	protected int canvasHeight;
-	protected int xAxis;
-	protected int yAxis;
-	protected int zAxis;
-	protected double ratioxAxis;
-	protected double ratioyAxis;
-	protected double ratiozAxis;
-	protected double mainAngle;
-	protected double viewAngle;
-	protected int[] canvasCenter;
-	protected double[] shapeCenter;
-	protected double[] deflection;
-	protected int[] upperShapeVertices;
-	protected int[] lowerShapeVertices;
+	protected int canvasWidth;		//current canvas Width.
+	protected int canvasHeight;		//current canvas height.
+	protected int xAxis;			//the Maze's x.
+	protected int yAxis;			//the Maze's y.
+	protected int zAxis;			//the Maze's z.
+	protected double ratioxAxis;	//rationed x in respect to the canvas size.
+	protected double ratioyAxis;	//rationed y in respect to the canvas size.
+	protected double ratiozAxis;	//rationed z in respect to the canvas size.
+	protected double mainAngle;		//angle for y rotation.
+	protected double viewAngle;		//real cal angle.
+	protected int[] canvasCenter;	//the x and y of the middle of the canvas.
+	protected double[] shapeCenter;	//the x and y of the middle of the shape.
+	protected double[] deflection;	//deflection in x and y.
+	protected int[] upperShapeVertices;	//the upper shape vertices.
+	protected int[] lowerShapeVertices;	//the lower shape vertices.
 	
+	
+	/**
+	 * Regular SWT Ctor.
+	 * @param parent - parenting Widget.
+	 * @param style - SWT style.
+	 */
 	public MazeCube(Composite parent, int style) {
 		super(parent, style);
-		MazeDisplayer canvas= this;
+		
+		MazeDisplayer canvas = this;
 		canvasWidth = this.getSize().x ;
 		canvasHeight = this.getSize().y;
 		
@@ -40,7 +52,7 @@ public class MazeCube extends MazeDisplayer {
 		zAxis = 10;//default
 		
 		canvasCenter = new int[2];
-		canvasCenter[0] = 50 ;
+		canvasCenter[0] = 50;
 		canvasCenter[1] = 50;
 		shapeCenter = new double[2];
 		deflection= new double[2];
@@ -55,23 +67,23 @@ public class MazeCube extends MazeDisplayer {
 			public void paintControl(PaintEvent event) {
 				if(mazeData!= null)
 				{
-					//System.out.println("MazeCube paintControl");
 					
-					xAxis = mazeData.getxAxis();	
+					
+					xAxis = mazeData.getxAxis();		
 					yAxis = mazeData.getyAxis();
 					zAxis = mazeData.getzAxis();
-					int sumAxis = xAxis + yAxis + zAxis;
-					double  ratioMultiplier = 100 / sumAxis;
 					
-					ratioxAxis = ratioMultiplier * xAxis;
+					int sumAxis = xAxis + yAxis + zAxis;		//summing the total of the dimension.
+					double  ratioMultiplier = 100 / sumAxis;	//getting the ration multiplier.
+					
+					ratioxAxis = ratioMultiplier * xAxis;		//each ratio axis receives its 'share' by its original size.
 					ratioyAxis = ratioMultiplier * yAxis;
 					ratiozAxis = ratioMultiplier * zAxis;
 					
-	//				xAxis = 21;		//STUB
-	//				yAxis = 51;
-	//				zAxis = 13;
+	
 					canvasWidth = canvas.getSize().x;
 					canvasHeight = canvas.getSize().y;
+					
 					double[] pointA = new double[2];
 					double[] pointB = new double[2];
 					double[] pointC = new double[2];
@@ -103,7 +115,7 @@ public class MazeCube extends MazeDisplayer {
 					deflection[0] = shapeCenter[0] - canvasCenter[0];
 					deflection[1] = shapeCenter[1] - canvasCenter[1];
 					
-					pointA[0] = pointA[0] - deflection[0];
+					pointA[0] = pointA[0] - deflection[0];			//deflecting each point according to the deflection.
 					pointA[1] = pointA[1] - deflection[1];
 					pointB[0] = pointB[0] - deflection[0];
 					pointB[1] = pointB[1] - deflection[1];
@@ -146,14 +158,15 @@ public class MazeCube extends MazeDisplayer {
 					event.gc.drawRoundRectangle((int) (canvasWidth*(pointF[0]/100)-2.5), (int) (canvasHeight*(pointF[1]/100)-2.5), 5, 5, 5, 5);
 					event.gc.setForeground(new Color(getDisplay(),0,0,0));
 					
-					event.gc.drawPolygon(upperShapeVertices);
-					event.gc.drawPolygon(lowerShapeVertices);
+					event.gc.drawPolygon(upperShapeVertices);	//drawing the upper Vertices and their edges.
+					event.gc.drawPolygon(lowerShapeVertices);	//drawing the lower Vertices and their edges.
+					//drawing the lines connecting the upper and lower vertices.
 					event.gc.drawLine((int)(canvasWidth*(pointA[0]/100)), (int)(canvasHeight*(pointA[1]/100)),(int)(canvasWidth*(pointE[0]/100)) ,(int)(canvasHeight*(pointE[1]/100)));
 					event.gc.drawLine((int)(canvasWidth*(pointB[0]/100)), (int)(canvasHeight*(pointB[1]/100)),(int)(canvasWidth*(pointF[0]/100)) ,(int)(canvasHeight*(pointF[1]/100)));
 					event.gc.drawLine((int)(canvasWidth*(pointC[0]/100)), (int)(canvasHeight*(pointC[1]/100)),(int)(canvasWidth*(pointG[0]/100)) ,(int)(canvasHeight*(pointG[1]/100)));
 					event.gc.drawLine((int)(canvasWidth*(pointD[0]/100)), (int)(canvasHeight*(pointD[1]/100)),(int)(canvasWidth*(pointH[0]/100)) ,(int)(canvasHeight*(pointH[1]/100)));
 	
-					Image image = new Image(getDisplay(),"resources/locationIcon.png");
+					Image image = new Image(getDisplay(),"resources/locationIcon.png");		//NEED FIX!!!
 					int imageWidth = image.getBounds().width;
 					int imageHeight = image.getBounds().height;
 					int width = (int) Math.round(getSize().x*0.05);

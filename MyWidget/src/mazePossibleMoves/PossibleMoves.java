@@ -13,38 +13,54 @@ import org.eclipse.swt.widgets.Label;
 
 import abstracts.MazeDisplayer;
 
+/**
+ * The Widget represents the actual moves the player can take.
+ * @author Guy Golan && Amit Sandak.
+ *
+ */
 public class PossibleMoves extends MazeDisplayer {
 
+	/**
+	 * Regular SWT Ctor.
+	 * @param parent - parenting widget.
+	 * @param style - SWT style.
+	 */
 	public PossibleMoves(Composite parent, int style) {
 		super(parent, style);
 		
-		//MazeDisplayer canvas = this;
+		
 		Image image = new Image(this.getDisplay(), "resources/bckrnd.jpeg");
 		
 		setBackgroundImage(image);
 		setBackgroundMode(SWT.INHERIT_FORCE);
-		//setBackground(new Color(null, 255, 255, 255));
+		
 		setLayout(new GridLayout(3,false));
 		
-		Label title = new Label(this, SWT.TITLE);
+		Label title = new Label(this, SWT.TITLE);			//widget title.
 		title.setText("Possible moves controller");
 		title.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
 		
+		//level up arrow widget.
 		Arrow lvlUp = new Arrow(this,"resources/upGreen.png","resources/upRed.png", SWT.FILL);
 		lvlUp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		//up arrow widget.
 		Arrow up= new Arrow(this,"resources/upGreen.png","resources/upRed.png", SWT.FILL);
 		up.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true, 2, 1));
 		
+		//level down arrow widget.
 		Arrow lvlDown= new Arrow(this,"resources/downGreen.png","resources/downRed.png", SWT.FILL);
 		lvlDown.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 2));
 
+		//left arrow widget.
 		Arrow left= new Arrow(this,"resources/leftGreen.png","resources/leftRed.png", SWT.FILL);
 		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		//right arrow widget.
 		Arrow right= new Arrow(this,"resources/rightGreen.png","resources/rightRed.png", SWT.FILL);
 		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		//down arrow widget.
 		Arrow down= new Arrow(this,"resources/downGreen.png","resources/downRed.png", SWT.FILL);
 		down.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 2, 1));
 		
@@ -53,17 +69,17 @@ public class PossibleMoves extends MazeDisplayer {
 			
 			@Override
 			public void paintControl(PaintEvent e) {
-				//System.out.println("PossibleMoves paintControl");
+				
 				ArrayList<String> moves = new ArrayList<String>();
 				
 				if ((charPosition!=null)&&(mazeData!=null))
 				{
-				String[] possibleMoves = mazeData.getPossibleMoves(charPosition);
+					String[] possibleMoves = mazeData.getPossibleMoves(charPosition);
 				
 					for (String string : possibleMoves) {
 						moves.add(string);
 					}
-								
+																//updating the Arrow Widgets of its color according to the actual possible moves.
 					if (moves.contains("UP"))
 						lvlUp.setState(true);
 					else
@@ -96,7 +112,7 @@ public class PossibleMoves extends MazeDisplayer {
 					else
 						up.setState(false);
 					
-					//redraw();
+					
 				}
 			}
 		});
