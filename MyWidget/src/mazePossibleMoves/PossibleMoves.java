@@ -28,9 +28,8 @@ public class PossibleMoves extends MazeDisplayer {
 	public PossibleMoves(Composite parent, int style) {
 		super(parent, style);
 		
-		
 		Image image = new Image(this.getDisplay(), "resources/bckrnd.jpeg");
-		
+		//main draw if- if no data exist will not draw a thing.
 		setBackgroundImage(image);
 		setBackgroundMode(SWT.INHERIT_FORCE);
 		

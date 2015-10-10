@@ -37,8 +37,11 @@ public class Arrow extends Canvas {
 			@Override
 			public void paintControl(PaintEvent e) {
 				
+				if (image!=null)
+						image.dispose();
 				
 				if(state == true)		//setting the actual image.
+					
 					   image = new Image(getDisplay(),green);
 				else
 					   image = new Image(getDisplay(),red);

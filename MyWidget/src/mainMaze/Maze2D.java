@@ -1,6 +1,8 @@
 package mainMaze;
 
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
@@ -22,7 +24,7 @@ import algorithms.mazeGenerators.Position;
  */
 public class Maze2D extends MazeDisplayer {
 	char crossSection;				//a char for the represented dimension.
-	int zoomFactor;					//a zoom factor controled by the mouse wheel (not yet fully implemented).
+	int zoomFactor;					//a zoom factor controlled by the mouse wheel (not yet fully implemented).
 	protected int state;			//current state of the character : pacman mouth open or closed.
 	protected int[] goal2d;			//contains the width and height of the goal position dynamically updated related to the crossSection variable.
 	protected int[] position2d;		//contains the width and height of the character position dynamically updated related to the crossSection variable.
@@ -32,7 +34,7 @@ public class Maze2D extends MazeDisplayer {
 	int cursorY;					//contains the mouse current y.
 	int cubeWidth;					//each maze tile's width.
 	int cubeHeight;					//each maze tile's height.
-	
+	ArrayList<Image> images;        //used to despose between redraws
 	
 	/**
 	 * Regular SWT Ctor.
@@ -44,6 +46,7 @@ public class Maze2D extends MazeDisplayer {
 		state = 1;			
 		zoomFactor = 0;
 		crossSection = 'x'; // default
+		images = new ArrayList<Image>();
 		
 		
 		addMouseWheelListener(new MouseWheelListener() {
@@ -67,7 +70,10 @@ public class Maze2D extends MazeDisplayer {
 			@Override
 			public void paintControl(PaintEvent e) {
 
-				
+				for (Image image : images) {
+					image.dispose();
+				}
+				images.clear();
 				e.gc.setForeground(new Color(null, 10, 36, 106));
 				e.gc.setBackground(new Color(null, 10, 36, 106));
 				width = getSize().x +zoomFactor*4;					//canvas width = real canvas width + the amount of zoom applied.
@@ -83,6 +89,7 @@ public class Maze2D extends MazeDisplayer {
 					
 					if (charPosition.equals(mazeData.getExit())) {				//if the player reached the end of the maze.
 						image = new Image(getDisplay(), "resources/winner.jpg");
+						images.add(image);
 						imageWidth = image.getBounds().width;
 						imageHeight = image.getBounds().height;
 						e.gc.drawImage(image, 0, 0, imageWidth, imageHeight, 0, 0, resizeWidth, resizeHeight);
@@ -111,8 +118,6 @@ public class Maze2D extends MazeDisplayer {
 								position2d = new int[] { charPosition.getY(),mazeData.getxAxis()-1- charPosition.getX() };		//updates the player's position.	
 								goal2d = new int[] { mazeData.getExit().getY(),mazeData.getxAxis()-1- mazeData.getExit().getX() };		//updates the goal position.	
 								break;																				
-							default:
-								// TODO
 						}
 
 						cubeWidth = width / maze2d[0].length;		 //calculation for current cubeWidth in respect to canvas width.
@@ -130,25 +135,31 @@ public class Maze2D extends MazeDisplayer {
 
 									switch (crossSection) {			//checks whether the solution is visible and needed to be drawn in the current crossSection.
 										case 'x':
-											if (solution.contains(new Position(charPosition.getX(), i, j))) {
+										case 'X':
+											if (solution.contains(new Position(charPosition.getX(), i, j))) 
 												flag = 1;
-											}
 											break;
 										case 'y':
-											if (solution.contains(new Position(i, charPosition.getY(), j))) {
+										case 'Y':
+											if (solution.contains(new Position(i, charPosition.getY(), j))) 
 												flag = 1;
-											}
 											break;
 										case 'z':
-											if (solution.contains(new Position(i, j, charPosition.getZ()))) {
+										case 'Z':
+											if (solution.contains(new Position(i, j, charPosition.getZ()))) 
 												flag = 1;
-											}
 											break;
 									}
-									if (flag == 1) {					//prints the solution.
-										System.out.println("solution print");
-										e.gc.setBackground(new Color(null, 255, 255, 255));
-										e.gc.fillOval(x + cubeWidth / 2, y + cubeHeight / 2, cubeWidth / 4, cubeHeight / 4);	//draws a small circle in the middle of the tile.
+									if (flag == 1) {	//prints the solution clue.
+										
+									e.gc.setBackground(new Color(null, 255, 255, 255));
+										
+										//draws a small circle in the middle of the tile.
+										if ((crossSection == 'x')||(crossSection == 'X'))
+											e.gc.fillOval(x + cubeWidth / 2, y + cubeHeight / 2, cubeWidth / 4, cubeHeight / 4);
+										else
+											e.gc.fillOval(x + cubeWidth / 2, (maze2d.length*cubeHeight) -cubeHeight -y + (cubeHeight / 2), cubeWidth / 4, cubeHeight / 4);
+												
 										e.gc.setBackground(new Color(null, 10, 36, 106));
 									}
 								}
@@ -161,31 +172,37 @@ public class Maze2D extends MazeDisplayer {
 						resizeHeight = cubeHeight;
 						switch (crossSection) {			//check if the player stands in the same plain as the goal in order to display it.
 							case 'x':
+							case 'X':
 								if (mazeData.getExit().getX() == charPosition.getX())
 									shouldShowExit = true;
 								break;
 							case 'y':
+							case 'Y':
 								if (mazeData.getExit().getY() == charPosition.getY())
 									shouldShowExit = true;
 								break;
 							case 'z':
+							case 'Z':
 								if (mazeData.getExit().getZ() == charPosition.getZ())
 									shouldShowExit = true;
 								break;
 						}
 						if (shouldShowExit == true) {
 							image = new Image(getDisplay(), "resources/pacmanwoman.png");
+							images.add(image);
 							imageWidth = image.getBounds().width;
 							imageHeight = image.getBounds().height;
 							e.gc.drawImage(image, 0, 0, imageWidth, imageHeight, goal2d[0] * cubeWidth, goal2d[1] * cubeHeight,resizeWidth, resizeHeight);
 
 						}
 
-						if (state == 1) {					//draws the pacman according to its 'state'.
+						if (state == 1) {			//draws the pacman according to its 'state'.
 							image = new Image(getDisplay(), "resources/pacman.png");
+							images.add(image);
 							state = 0;
 						} else {
 							image = new Image(getDisplay(), "resources/closedpacman.png");
+							images.add(image);
 							state = 1;
 						}
 						
@@ -195,7 +212,8 @@ public class Maze2D extends MazeDisplayer {
 						{
 							if(lastPosition[0]>position2d[0])
 							{
-								Image vertical = rotateImage(rotateImage(image));
+								Image vertical = flipImage(image);
+								images.add(vertical);
 							    imageWidth = vertical.getBounds().width;
 								imageHeight = vertical.getBounds().height;
 							    e.gc.drawImage(vertical, 0, 0, imageWidth, imageHeight, position2d[0] * cubeWidth, position2d[1] * cubeHeight,resizeWidth, resizeHeight);
@@ -203,13 +221,15 @@ public class Maze2D extends MazeDisplayer {
 							else if(lastPosition[1]>position2d[1])
 							{
 								Image vertical = rotateImage(image);
+								images.add(vertical);
 							    imageWidth = vertical.getBounds().width;
 								imageHeight = vertical.getBounds().height;
 							    e.gc.drawImage(vertical, 0, 0, imageWidth, imageHeight, position2d[0] * cubeWidth, position2d[1] * cubeHeight,resizeWidth, resizeHeight);
 							}
 							else if(lastPosition[1]<position2d[1])
 							{
-								Image vertical = rotateImage(rotateImage(rotateImage(image)));
+								Image vertical = rotateImage(image,3);
+								images.add(vertical);
 							    imageWidth = vertical.getBounds().width;
 								imageHeight = vertical.getBounds().height;
 							    e.gc.drawImage(vertical, 0, 0, imageWidth, imageHeight, position2d[0] * cubeWidth, position2d[1] * cubeHeight,resizeWidth, resizeHeight);
@@ -262,6 +282,17 @@ public class Maze2D extends MazeDisplayer {
 	 */
 	protected Image rotateImage(Image image)
 	{
+		return rotateImage(image,1);
+	}
+	
+	/**
+	 * A rotation transformation on an image.
+	 * @param image - Image to rotate.
+	 * @param rotateNum - rotations number.
+	 * @return - Image. The new rotated image.
+	 */
+	protected Image rotateImage(Image image, int rotateNum)
+	{
 		 ImageData sd = image.getImageData();
 	
 	     ImageData dd = new ImageData(sd.height, sd.width, sd.depth, sd.palette);
@@ -269,7 +300,8 @@ public class Maze2D extends MazeDisplayer {
 	     int style = SWT.UP;
 	
 	     boolean up = (style & SWT.UP) == SWT.UP;
-	
+	for(int i =0;i<rotateNum;i++)
+	{
 	     // Run through the horizontal pixels
 	     for (int sx = 0; sx < sd.width; sx++) {
 	       // Run through the vertical pixels
@@ -281,10 +313,40 @@ public class Maze2D extends MazeDisplayer {
 	         dd.setPixel(dx, dy, sd.getPixel(sx, sy));
 	       }
 	     }
+	     ImageData tmp = sd;
+	     sd = dd;
+	     dd=tmp;
+	}
 	
 	     // Create the vertical image
-	     return new Image(getDisplay(), dd);
+	     return new Image(getDisplay(), sd);
 	
 	}
+	
+	/**
+	 * A flip transformation on an image.
+	 * @param image - Image to flip.
+	 * @return - Image. The new flip image.
+	 */
+	 protected Image flipImage(Image srcImage) {
+		 
+	        ImageData srcData = srcImage.getImageData();
+		    int bytesPerPixel = srcData.bytesPerLine / srcData.width;
+		    int destBytesPerLine = srcData.width * bytesPerPixel;
+		    byte[] newData = new byte[srcData.data.length];
+		    for (int srcY = 0; srcY < srcData.height; srcY++) {
+		      for (int srcX = 0; srcX < srcData.width; srcX++) {
+		        int destX = 0, destY = 0, destIndex = 0, srcIndex = 0;
+		          destX = srcData.width - srcX - 1;
+		          destY = srcY;
+		        destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
+		        srcIndex = (srcY * srcData.bytesPerLine) + (srcX * bytesPerPixel);
+		        System.arraycopy(srcData.data, srcIndex, newData, destIndex, bytesPerPixel);
+		      }
+		    }
+		           // Create the image flip
+		    	    return new Image (getDisplay(),new ImageData(srcData.width, srcData.height, srcData.depth,srcData.palette, destBytesPerLine, newData));
+	}
+	
 }
 
