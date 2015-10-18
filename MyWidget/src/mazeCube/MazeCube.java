@@ -77,17 +77,17 @@ public class MazeCube extends MazeDisplayer {
 			
 			@Override
 			public void paintControl(PaintEvent event) {
-//				if(mazeData!= null)
-//				{
+				if(mazeData!= null)
+				{
 					
 					
-					//xAxis = mazeData.getxAxis();		
-					//yAxis = mazeData.getyAxis();		
-					//zAxis = mazeData.getzAxis();
+					xAxis = mazeData.getxAxis();		
+					yAxis = mazeData.getyAxis();		
+					zAxis = mazeData.getzAxis();
 				
-					//playerAbsoluteX = charPosition.getX();
-					//playerAbsoluteY = charPosition.getY();
-					//playerAbsoluteZ = charPosition.getZ();
+					playerAbsoluteX = charPosition.getX();
+					playerAbsoluteY = charPosition.getY();
+					playerAbsoluteZ = charPosition.getZ();
 				
 					int sumPos = playerAbsoluteX + playerAbsoluteY + playerAbsoluteZ;
 					double ratioPosMultiplier = 100 / sumPos;
@@ -201,10 +201,9 @@ public class MazeCube extends MazeDisplayer {
 					int width = (int) Math.round(getSize().x*0.02);						//
 					int height = (int) Math.round(getSize().y*0.02);
 					event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]-((lowerShapeVertices[6]-upperShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100))/100),(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
-					//event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]+((lowerShapeVertices[6]-lowerShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100)))/100,(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
-
+					
 				}
-			//}
+			}
 		});
 	}
 	
