@@ -17,6 +17,15 @@ public class MazeCube extends MazeDisplayer {
 
 	protected int canvasWidth;		//current canvas Width.
 	protected int canvasHeight;		//current canvas height.
+	protected int playerAbsoluteX;
+	protected int playerAbsoluteY;	
+	protected int playerAbsoluteZ;
+	protected double ratioPlayerX;
+	protected double ratioPlayerY;
+	protected double ratioPlayerZ;
+	protected int realPlayerX;
+	protected int realPlayerY;
+	protected int realPlayerZ;
 	protected int xAxis;			//the Maze's x.
 	protected int yAxis;			//the Maze's y.
 	protected int zAxis;			//the Maze's z.
@@ -47,9 +56,12 @@ public class MazeCube extends MazeDisplayer {
 		
 		mainAngle = 120 ; //default
 		viewAngle = (180 - mainAngle)/2;
-		xAxis = 10;//default
-		yAxis = 10;//default
-		zAxis = 10;//default
+		xAxis = 15;//default
+		yAxis = 15;//default
+		zAxis = 15;//default
+		playerAbsoluteX = 1;	//default player starting position.
+		playerAbsoluteY = 1;	//
+		playerAbsoluteZ = 1;	//
 		
 		canvasCenter = new int[2];
 		canvasCenter[0] = 50;
@@ -65,16 +77,26 @@ public class MazeCube extends MazeDisplayer {
 			
 			@Override
 			public void paintControl(PaintEvent event) {
-				if(mazeData!= null)
-				{
+//				if(mazeData!= null)
+//				{
 					
 					
-					xAxis = mazeData.getxAxis();		
-					yAxis = mazeData.getyAxis();
-					zAxis = mazeData.getzAxis();
-					
+					//xAxis = mazeData.getxAxis();		
+					//yAxis = mazeData.getyAxis();		
+					//zAxis = mazeData.getzAxis();
+				
+					//playerAbsoluteX = charPosition.getX();
+					//playerAbsoluteY = charPosition.getY();
+					//playerAbsoluteZ = charPosition.getZ();
+				
+					int sumPos = playerAbsoluteX + playerAbsoluteY + playerAbsoluteZ;
+					double ratioPosMultiplier = 100 / sumPos;
 					int sumAxis = xAxis + yAxis + zAxis;		//summing the total of the dimension.
 					double  ratioMultiplier = 100 / sumAxis;	//getting the ration multiplier.
+					
+					ratioPlayerX = ratioPosMultiplier * playerAbsoluteX;
+					ratioPlayerY = ratioPosMultiplier * playerAbsoluteY;
+					ratioPlayerZ = ratioPosMultiplier * playerAbsoluteZ;
 					
 					ratioxAxis = ratioMultiplier * xAxis;		//each ratio axis receives its 'share' by its original size.
 					ratioyAxis = ratioMultiplier * yAxis;
@@ -150,6 +172,9 @@ public class MazeCube extends MazeDisplayer {
 					lowerShapeVertices[6] = (int) (canvasWidth*(pointH[0]/100));
 					lowerShapeVertices[7] = (int) (canvasHeight*(pointH[1]/100));
 					
+					System.out.println("F x:" + lowerShapeVertices[2]+" y: "+lowerShapeVertices[3]);
+					System.out.println("G x:" + lowerShapeVertices[4]+" y: "+ lowerShapeVertices[5]);
+					System.out.println("B x:" + upperShapeVertices[2]+" y: "+upperShapeVertices[3]);
 					
 					event.gc.setForeground(new Color(getDisplay(),255,0,0));
 					event.gc.drawRoundRectangle((int) (canvasWidth*(pointE[0]/100)-2.5), (int) (canvasHeight*(pointE[1]/100)-2.5), 5, 5, 5, 5);
@@ -166,14 +191,21 @@ public class MazeCube extends MazeDisplayer {
 					event.gc.drawLine((int)(canvasWidth*(pointC[0]/100)), (int)(canvasHeight*(pointC[1]/100)),(int)(canvasWidth*(pointG[0]/100)) ,(int)(canvasHeight*(pointG[1]/100)));
 					event.gc.drawLine((int)(canvasWidth*(pointD[0]/100)), (int)(canvasHeight*(pointD[1]/100)),(int)(canvasWidth*(pointH[0]/100)) ,(int)(canvasHeight*(pointH[1]/100)));
 	
-					Image image = new Image(getDisplay(),"resources/locationIcon.png");		//NEED FIX!!!
+					
+					double k = Math.sqrt(Math.pow((lowerShapeVertices[4]-lowerShapeVertices[2]),2) + Math.pow((lowerShapeVertices[5]-lowerShapeVertices[3]),2));
+					
+					
+					Image image = new Image(getDisplay(),"resources/locationIcon.png");		
 					int imageWidth = image.getBounds().width;
 					int imageHeight = image.getBounds().height;
-					int width = (int) Math.round(getSize().x*0.05);
-					int height = (int) Math.round(getSize().y*0.05);
-					event.gc.drawImage(image,0,0,imageWidth,imageHeight,0,0,width,height);
+					int width = (int) Math.round(getSize().x*0.02);						//
+					int height = (int) Math.round(getSize().y*0.02);
+					event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]-((lowerShapeVertices[6]-upperShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100))/100),(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
+					//event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]+((lowerShapeVertices[6]-lowerShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100)))/100,(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
+
 				}
-			}
+			//}
 		});
 	}
+	
 }
