@@ -59,9 +59,9 @@ public class MazeCube extends MazeDisplayer {
 		xAxis = 15;//default
 		yAxis = 15;//default
 		zAxis = 15;//default
-		playerAbsoluteX = 1;	//default player starting position.
-		playerAbsoluteY = 1;	//
-		playerAbsoluteZ = 1;	//
+		playerAbsoluteX = 10;	//default player starting position.
+		playerAbsoluteY = 10;	//
+		playerAbsoluteZ = 10;	//
 		
 		canvasCenter = new int[2];
 		canvasCenter[0] = 50;
@@ -198,9 +198,9 @@ public class MazeCube extends MazeDisplayer {
 					Image image = new Image(getDisplay(),"resources/locationIcon.png");		
 					int imageWidth = image.getBounds().width;
 					int imageHeight = image.getBounds().height;
-					int width = (int) Math.round(getSize().x*0.02);						//
+					int width = (int) Math.round(getSize().x*0.02);						
 					int height = (int) Math.round(getSize().y*0.02);
-					event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]-((lowerShapeVertices[6]-upperShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100))/100),(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
+					event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]+((lowerShapeVertices[6]-upperShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100))/100),(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
 					
 				}
 			}
