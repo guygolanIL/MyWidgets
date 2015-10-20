@@ -62,7 +62,6 @@ public class Maze2D extends MazeDisplayer {
 					redraw();					//redraws the widget.
 				}
 				
-				
 			}
 		});
 		addPaintListener(new PaintListener() {
@@ -263,8 +262,7 @@ public class Maze2D extends MazeDisplayer {
 				}
 			});
 		}
-		// TODO add exception.
-
+		
 	}
 
 	/**
@@ -293,34 +291,34 @@ public class Maze2D extends MazeDisplayer {
 	 */
 	protected Image rotateImage(Image image, int rotateNum)
 	{
-		 ImageData sd = image.getImageData();
+		ImageData sd = image.getImageData();
 	
-	     ImageData dd = new ImageData(sd.height, sd.width, sd.depth, sd.palette);
+	    ImageData dd = new ImageData(sd.height, sd.width, sd.depth, sd.palette);
 	
-	     int style = SWT.UP;
+	    int style = SWT.UP;
 	
-	     boolean up = (style & SWT.UP) == SWT.UP;
-	for(int i =0;i<rotateNum;i++)
-	{
-	     // Run through the horizontal pixels
-	     for (int sx = 0; sx < sd.width; sx++) {
-	       // Run through the vertical pixels
-	       for (int sy = 0; sy < sd.height; sy++) {
-	         // Determine where to move pixel to in destination image data
-	         int dx = up ? sy : sd.height - sy - 1;
-	         int dy = up ? sd.width - sx - 1 : sx;
-	         // Swap the x, y source data to y, x in the destination
-	         dd.setPixel(dx, dy, sd.getPixel(sx, sy));
-	       }
-	     }
-	     ImageData tmp = sd;
-	     sd = dd;
-	     dd=tmp;
-	}
-	
-	     // Create the vertical image
-	     return new Image(getDisplay(), sd);
-	
+	    boolean up = (style & SWT.UP) == SWT.UP;
+		for(int i =0;i<rotateNum;i++)
+		{
+		     // Run through the horizontal pixels
+		     for (int sx = 0; sx < sd.width; sx++) {
+		       // Run through the vertical pixels
+		       for (int sy = 0; sy < sd.height; sy++) {
+		         // Determine where to move pixel to in destination image data
+		         int dx = up ? sy : sd.height - sy - 1;
+		         int dy = up ? sd.width - sx - 1 : sx;
+		         // Swap the x, y source data to y, x in the destination
+		         dd.setPixel(dx, dy, sd.getPixel(sx, sy));
+		       }
+		     }
+		     ImageData tmp = sd;
+		     sd = dd;
+		     dd=tmp;
+		}
+		
+		     // Create the vertical image
+		     return new Image(getDisplay(), sd);
+		
 	}
 	
 	/**
