@@ -71,7 +71,7 @@ public class MazeCube extends MazeDisplayer {
 		upperShapeVertices = new int[8];
 		lowerShapeVertices = new int[8];
 		
-		setBackground(new Color(null, 255, 255, 255));
+		setBackground(new Color(null, 204	, 253, 203));
 
 		addPaintListener(new PaintListener() {
 			
@@ -198,8 +198,8 @@ public class MazeCube extends MazeDisplayer {
 					Image image = new Image(getDisplay(),"resources/locationIcon.png");		
 					int imageWidth = image.getBounds().width;
 					int imageHeight = image.getBounds().height;
-					int width = (int) Math.round(getSize().x*0.02);						
-					int height = (int) Math.round(getSize().y*0.02);
+					int width = (int) Math.round(getSize().x*0.05);						
+					int height = (int) Math.round(getSize().y*0.05);
 					event.gc.drawImage(image,0,0,imageWidth,imageHeight,(int)(lowerShapeVertices[2]+((lowerShapeVertices[6]-upperShapeVertices[2])*(playerAbsoluteY/(double)yAxis*100))/100),(int)(lowerShapeVertices[3]-((lowerShapeVertices[3]-upperShapeVertices[3])*(playerAbsoluteX/(double)xAxis*100))/100),width,height);
 					
 				}
