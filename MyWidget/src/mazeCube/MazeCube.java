@@ -172,9 +172,6 @@ import abstracts.MazeDisplayer;
 						lowerShapeVertices[6] = (int) (canvasWidth*(pointH[0]/100));
 						lowerShapeVertices[7] = (int) (canvasHeight*(pointH[1]/100));
 						
-						System.out.println("F x:" + lowerShapeVertices[2]+" y: "+lowerShapeVertices[3]);
-						System.out.println("G x:" + lowerShapeVertices[4]+" y: "+ lowerShapeVertices[5]);
-						System.out.println("B x:" + upperShapeVertices[2]+" y: "+upperShapeVertices[3]);
 						
 						event.gc.setForeground(new Color(getDisplay(),255,0,0));
 						event.gc.drawRoundRectangle((int) (canvasWidth*(pointE[0]/100)-2.5), (int) (canvasHeight*(pointE[1]/100)-2.5), 5, 5, 5, 5);
